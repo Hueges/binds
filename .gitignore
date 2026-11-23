@@ -18,3 +18,8 @@ venv/
 CLAUDE.md
 **/CLAUDE.md
 .claude/
+
+# Personal notes
+BELESKE.md
+claude_wraper.py
+claude_wraper2.py
