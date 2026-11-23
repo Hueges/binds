@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from binds.abstractions.functor import Functor
+from binds import Functor
 
 
 class Box[T](Functor[T]):
