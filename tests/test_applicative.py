@@ -1,6 +1,6 @@
 from collections.abc import Callable
 
-from binds.abstractions.applicative import Applicative
+from binds import Applicative
 
 
 class Box[T](Applicative[T]):

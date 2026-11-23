@@ -17,7 +17,7 @@ pip install binds
 For development:
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/Hueges/binds.git
 cd binds
 pip install -e ".[dev]"
 ```
@@ -37,7 +37,7 @@ Implement an abstraction by subclassing it:
 
 ```python
 from collections.abc import Callable
-from binds.abstractions.applicative import Applicative
+from binds import Applicative
 
 
 class Box[T](Applicative[T]):
@@ -60,6 +60,9 @@ Box.pure(lambda x: x * 2).apply(Box(21)).value          # 42
 ```
 
 Note that `apply` is called on the container holding the **function**, with the container holding the **argument**.
+
+Everything public is importable from the top-level package (`from binds import Functor, Applicative`).
+Internal module paths such as `binds.abstractions.functor` may change between versions.
 
 ## Laws
 
