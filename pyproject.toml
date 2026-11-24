@@ -11,7 +11,24 @@ readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
 license-files = ["LICENSE"]
+authors = [{ name = "Borisav Damnjanovic" }]
+keywords = ["functional programming", "functor", "applicative", "monad", "typed"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries",
+    "Typing :: Typed",
+]
 dependencies = []
+
+[project.urls]
+Repository = "https://github.com/Hueges/binds"
+Issues = "https://github.com/Hueges/binds/issues"
 
 [project.optional-dependencies]
 dev = [

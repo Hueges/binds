@@ -1,0 +1,76 @@
+name: Publish
+
+on:
+  # Pravi PyPI: kad se na GitHubu objavi release (npr. v0.1.0)
+  release:
+    types: [published]
+  # TestPyPI: ručno pokretanje (gh workflow run publish.yml)
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check that the release tag matches the version in pyproject.toml
+        if: github.event_name == 'release'
+        run: |
+          version=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match version v$version from pyproject.toml"
+            exit 1
+          fi
+
+      - name: Run tests before publishing
+        run: |
+          pip install -e ".[dev]"
+          pytest
+          mypy src
+
+      - name: Build wheel and sdist
+        run: |
+          pip install build
+          python -m build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  testpypi:
+    if: github.event_name == 'workflow_dispatch'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/binds
+    permissions:
+      id-token: write  # Trusted Publishing: bez API ključa
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+  pypi:
+    if: github.event_name == 'release'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/binds
+    permissions:
+      id-token: write  # Trusted Publishing: bez API ključa
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
